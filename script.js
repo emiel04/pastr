@@ -25,3 +25,14 @@ function setImage(imageData) {
   $imgContainer.innerHTML = '';
   $imgContainer.insertAdjacentElement('beforeEnd', imgElement);
 }
+
+const dropzone = new Dropzone(document.body, {
+  autoProcessQueue: false,
+  url: "/",
+  clickable: false
+});
+
+
+dropzone.on('thumbnail', function(file, dataURL) {
+  setImage(file.dataURL)
+});

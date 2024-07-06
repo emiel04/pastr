@@ -3,6 +3,7 @@ body{
   background: #222831; 
   font-family: 'Segoe UI', sans-serif;
   color: azure;
+  height: 100dvh;
 }
 img{
   max-width: 80%;
@@ -12,4 +13,7 @@ main, div{
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+.dz-preview{
+  display: none;
 }
