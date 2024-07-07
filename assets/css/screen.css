@@ -4,6 +4,7 @@ body{
   font-family: 'Segoe UI', sans-serif;
   color: azure;
   height: 100dvh;
+  margin: 0;
 }
 img{
   max-width: 80%;
