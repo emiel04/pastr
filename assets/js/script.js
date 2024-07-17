@@ -1,26 +1,65 @@
 function listenToPaste(){
-  document.addEventListener('paste', function(event) {
-    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-  
-    for (index in items) {
-        var item = items[index];
-        if (item.kind === 'file') {
-            var blob = item.getAsFile();
-            if (blob.type.indexOf('image') !== -1) {
-                var reader = new FileReader();
-                reader.onload = function(event) {
-                    var imageData = event.target.result;
-                    setImage(imageData)
-                };
-                reader.readAsDataURL(blob);
-            }
-        }
-    }
-  });
+  document.addEventListener('paste', handlePaste);
   
 }
 
-function setImage(imageData) {
+
+function handlePaste(event) {
+  var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+
+  for (index in items) {
+      var item = items[index];
+      if (item.kind === 'file') {
+          var blob = item.getAsFile();
+          if (blob.type.indexOf('image') !== -1) {
+              var reader = new FileReader();
+              reader.onload = function(event) {
+                  var imageData = event.target.result;
+                  setImageData(imageData)
+              };
+              reader.readAsDataURL(blob);
+          }
+      }else if (item.kind === 'string'){
+        item.getAsString((i) => {
+          handleString(i)
+        })
+      }
+  }
+}
+
+
+
+const getImage = function(url){
+  var image = new Image();
+  image.src = url;
+  if (image.width == 0) {
+     return null;
+  } else {
+     return image;
+  }
+}
+
+function handleString(str) {
+  if(!isValidUrl(str)) return;
+  const img = getImage(str);
+  if (!img) return;
+  setImage(img)
+}
+
+const isValidUrl = urlString=> {
+  try { 
+    return Boolean(new URL(urlString)); 
+  }
+  catch(e){ 
+    return false; 
+  }
+}
+function setImage(image) {
+  $imgContainer = document.querySelector("#img")
+  $imgContainer.innerHTML = '';
+  $imgContainer.insertAdjacentElement('beforeEnd', image);
+}
+function setImageData(imageData) {
   var imgElement = document.createElement('img');
   imgElement.src = imageData;
   $imgContainer = document.querySelector("#img")
@@ -46,7 +85,7 @@ function initDropzone() {
   });
   
   dropzone.on('thumbnail', function(file, dataURL) {
-    setImage(file.dataURL)
+    setImageData(file.dataURL)
   });
 }
 
